@@ -29,15 +29,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     } on FirebaseAuthException catch (e){
       print(e);
-       //showDialog (
-       // context :context,
-       //  builder : (context)) {
-      //  return AlertDialog(
-       //   content: Text(e.message.toString()),
-      //  );
-      }
+       showDialog(
+  context: context,
+  builder: (context) {
+    return AlertDialog(
+      content: Text(e.message.toString()),
+    );
+  },
+);
     }
-
+  }
 
   
     
