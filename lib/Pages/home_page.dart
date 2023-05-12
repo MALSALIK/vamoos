@@ -24,6 +24,12 @@ final user = FirebaseAuth.instance.currentUser!;
           mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('signed in as:' + user.email! ),
+          MaterialButton(onPressed: (){
+            FirebaseAuth.instance.signOut();
+          },
+          color: Colors.deepPurpleAccent,
+          child: Text('SIgn Out'),
+          ),
         ],
       )) ,
     );
