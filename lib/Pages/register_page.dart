@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../auth/user_type_butten.dart';
+
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
   const RegisterPage({super.key,required this.showLoginPage});
@@ -16,14 +18,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
       //text controllers
    final _emailController = TextEditingController();
+   final _confirmemailController = TextEditingController();
    final _passwordController = TextEditingController();
    final _confirmpasswordController = TextEditingController();
+   final _phoneNumberController = TextEditingController();
+
 
    @override
   void dispose() {
      _emailController.dispose();
+     _confirmemailController.dispose();
      _passwordController.dispose();
      _confirmpasswordController.dispose();
+      _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -49,6 +56,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
 
   }
+
+
+bool emailConfirmed (){
+    if (_confirmemailController.text.trim()==_emailController.text.trim()){
+      return true;
+    } else {
+      return false;
+    }
+
+
+  }
+
+
+
 
 
   @override
@@ -86,6 +107,38 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 10,
               ),
 
+
+
+
+                    //phone textfield
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: _phoneNumberController ,
+                      keyboardType: TextInputType.phone,
+                      
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Phone Number',
+                           hintText: 'Enter Your Phone Number',
+                           prefixIcon: Icon(Icons.phone),
+                           ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
+
               //email textfield
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -99,7 +152,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                          border: InputBorder.none, hintText: 'Email'),
+                          border: InputBorder.none, 
+                          labelText: 'Email',
+                           hintText: 'Enter Your Email',
+                           prefixIcon: Icon(Icons.email),
+                          ),
                     ),
                   ),
                 ),
@@ -107,6 +164,34 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(
                 height: 10,
               ),
+
+                //confirm Password textfield
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: _confirmemailController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                           labelText: 'Confirm Email',
+                           hintText: 'Confirm Your Email',
+                           prefixIcon: Icon(Icons.email),
+                           ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+
 
               //Password textfield
               Padding(
@@ -122,7 +207,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                          border: InputBorder.none, hintText: 'Password'),
+                          border: InputBorder.none,
+                           labelText: 'Password',
+                           hintText: 'Enter Your Password',
+                           prefixIcon: Icon(Icons.password),
+                           ),
                     ),
                   ),
                 ),
@@ -145,7 +234,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _confirmpasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                          border: InputBorder.none, hintText: 'Confirm Password'),
+                          border: InputBorder.none, 
+                         labelText: 'Confirm Password',
+                           hintText: 'Confirm Your Password',
+                           prefixIcon: Icon(Icons.password),
+                          ),
                     ),
                   ),
                 ),
@@ -153,6 +246,8 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(
                 height: 10,
               ),
+
+               GestureDetector(child: UserTypeButton()),
 
               //sign in button
               Padding(
