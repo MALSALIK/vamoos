@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:vamoos/auth/auth_page.dart';
 
 import '../Pages/Host/host_page.dart';
-import '../Pages/User/user_page.dart';
-import '../Pages/home_page.dart';
-import '../Pages/login_page.dart';
+import '../Pages/User/navigation_home_screen.dart';
+
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key , required this.isHost});
@@ -22,7 +21,7 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return  isHost ? UserPage() : HostPage();
+            return  isHost?   HostPage() : NavigationHomeScreen();
           } else {
             return AuthPage();
           }

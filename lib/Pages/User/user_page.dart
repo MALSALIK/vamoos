@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 class UserPage extends StatelessWidget {
   const UserPage({Key? key}) : super(key: key);
 
@@ -9,19 +10,20 @@ class UserPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('User Page'),
       ),
-      body:  Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('signed in as:'  ),
-          MaterialButton(onPressed: (){
-            FirebaseAuth.instance.signOut();
-          },
-          color: Colors.deepPurpleAccent,
-          child: Text('SIgn Out'),
-          ),
-        ],
-      ),
+          children: [
+            const Text('signed in as:'),
+            MaterialButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+              },
+              color: Colors.deepPurpleAccent,
+              child: const Text('SIgn Out'),
+            ),
+          ],
+        ),
       ),
     );
   }
