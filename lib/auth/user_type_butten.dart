@@ -13,7 +13,7 @@ class _UserTypeButtonState extends State<UserTypeButton> {
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
-      title: const Text('Are you a Host?'),
+      title: const Text('Are you a Host ?'),
       value: _isHostSelected,
       onChanged: (bool value) {
         setState(() {

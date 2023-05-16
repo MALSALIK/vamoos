@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vamoos/Pages/User/app_theme.dart';
 
 import 'forgot_password_page.dart';
 
@@ -127,9 +128,9 @@ class _LoginPageState extends State<LoginPage> {
                          ),
                          );
                       },
-                      child: Text('Forgot Pasword',
+                      child: Text('Forgot Pasword ?',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: AppTheme.lightBlue,
                         fontWeight: FontWeight.bold,
                       ),
                       ),
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                       padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 29, 12, 128),
+                        color:AppTheme.lightBlue,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
@@ -183,9 +184,9 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: widget.showRegisterPage,
                     child: Text(
-                      '  Register now',
+                      '  Register here !',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: AppTheme.lightBlue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

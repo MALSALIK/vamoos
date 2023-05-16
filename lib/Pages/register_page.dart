@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vamoos/Pages/User/app_theme.dart';
 
 import '../auth/user_type_butten.dart';
 
@@ -257,7 +258,7 @@ bool emailConfirmed (){
                   child: Container(
                       padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 29, 12, 128),
+                        color: AppTheme.lightBlue,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
@@ -290,9 +291,9 @@ bool emailConfirmed (){
                   GestureDetector(
                     onTap: widget.showLoginPage,
                     child: Text(
-                      '  Login now',
+                      '  Login here !',
                       style: TextStyle(
-                        color: Colors.blue,
+                        color: AppTheme.lightBlue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
