@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+
   Future signIn() async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(),
@@ -148,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
                   onTap: signIn,
-                  child: Container(
+                  child:  Container( 
                       padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
                         color:AppTheme.lightBlue,
@@ -177,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'Not a member?',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppTheme.notWhite,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
