@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -337,6 +337,7 @@ class UserTypeButton extends StatefulWidget {
   const UserTypeButton({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _UserTypeButtonState createState() => _UserTypeButtonState();
 }
 
