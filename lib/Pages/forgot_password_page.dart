@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

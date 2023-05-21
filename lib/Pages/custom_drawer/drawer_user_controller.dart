@@ -23,6 +23,7 @@ class DrawerUserController extends StatefulWidget {
   final DrawerIndex? screenIndex;
 
   @override
+  // ignore: library_private_types_in_public_api
   _DrawerUserControllerState createState() => _DrawerUserControllerState();
 }
 
@@ -120,6 +121,7 @@ class _DrawerUserControllerState extends State<DrawerUserController>
                           onDrawerClick();
                           try {
                             widget.onDrawerCall!(indexType);
+                          // ignore: empty_catches
                           } catch (e) {}
                         },
                       ),

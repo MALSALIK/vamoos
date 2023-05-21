@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages
+// ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, library_prefixes
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vamoos/Pages/User/app_theme.dart';
+import 'package:vamoos/models/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuthUser;
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -36,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future signUp() async {
     if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuthUser.FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -56,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future createUser(User user) async {
-    final docUser = FirebaseFirestore.instance.collection('users').doc();
+    final docUser = FirebaseFirestore.instance.collection('user').doc();
     user.id = docUser.id;
     final json = user.toJson();
     await docUser.set(json);
@@ -365,41 +366,4 @@ class _UserTypeButtonState extends State<UserTypeButton> {
   }
 } // class user type button
 
-class User {
-  String id;
-  final bool utype;
-  final String uname;
-  final String email;
-  final int phoneno;
-  final String password;
 
-  User(
-      {required this.utype,
-      required this.uname,
-      required this.email,
-      required this.phoneno,
-      required this.id,
-      required this.password});
-
-  factory User.fromSnapshot(DocumentSnapshot snapshot) {
-    var data = snapshot.data() as Map<String, dynamic>;
-    return User(
-      id: snapshot.id,
-      utype: data['utype'],
-      uname: data['name'],
-      email: data['email'],
-      password: data['password'],
-      phoneno: data['phone'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'uname': uname,
-      'email': email,
-      'phoneno': phoneno,
-      'utype': utype,
-      'password': password,
-    };
-  }
-}

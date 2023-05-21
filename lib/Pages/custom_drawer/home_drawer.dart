@@ -1,5 +1,8 @@
 
+// ignore_for_file: library_private_types_in_public_api, avoid_print, constant_identifier_names
+
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:firebase_auth/firebase_auth.dart';
 import '../User/app_theme.dart';
 
