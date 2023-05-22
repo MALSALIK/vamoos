@@ -1,8 +1,6 @@
 
-
-
 import 'package:flutter/widgets.dart';
-import 'package:vamoos/Pages/User/user_page.dart';
+import '../Pages/User/user_home_screen.dart';
 
 class HostList {
   HostList({
@@ -17,7 +15,7 @@ class HostList {
 
     HostList(
       imagePath: '',
-      navigateScreen: const UserPage(),
+      navigateScreen: const UserHomePage(),
     ),
    
    

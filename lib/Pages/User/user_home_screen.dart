@@ -39,7 +39,7 @@ class _UserHomePageState extends State<UserHomePage> with TickerProviderStateMix
             return Padding(
               padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
               child: Column(
-                
+                 
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -75,6 +75,7 @@ class _UserHomePageState extends State<UserHomePage> with TickerProviderStateMix
                 ],
               ),
             );
+                
           }
         },
       ),

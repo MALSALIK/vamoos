@@ -7,7 +7,7 @@ import '../custom_drawer/home_drawer.dart';
 import 'app_theme.dart';
 import 'feedback_screen.dart';
 import 'help_screen.dart';
-import 'home_screen.dart';
+import 'user_home_screen.dart';
 import 'invite_friend_screen.dart';
 
 class NavigationHomeScreen extends StatefulWidget {

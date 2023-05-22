@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vamoos/Pages/User/app_theme.dart';
 
-import 'forgot_password_page.dart';
+import '../Pages/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
