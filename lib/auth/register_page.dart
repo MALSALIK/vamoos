@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, library_prefixes
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vamoos/Pages/User/app_theme.dart';
@@ -40,13 +41,15 @@ class _RegisterPageState extends State<RegisterPage> {
       await FirebaseAuthUser.FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
+
       );
+      
     }
 
     // ignore: unused_local_variable
     final user = User(
       id: "",
-      utype: _UserTypeButtonState()._isHostSelected,
+      utype: false,
       uname: _unameController.text.trim(),
       phoneno: int.tryParse(_phoneNumberController.text) ?? 0,
       password: _passwordController.text.trim(),
@@ -128,6 +131,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _phoneNumberController,
                       keyboardType: TextInputType.phone,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      // to allow the user to input digits only (security breach)
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         labelText: 'Phone Number',
