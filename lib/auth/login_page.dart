@@ -1,10 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, depend_on_referenced_packages
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:vamoos/Pages/User/app_theme.dart';
 
 import '../Pages/forgot_password_page.dart';
+import '../widgets/custom_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
@@ -18,13 +24,55 @@ class _LoginPageState extends State<LoginPage> {
   //text controller
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  bool isWorking = false;
 
   Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    Box box = await Hive.openBox('userData');
+
+    setState(() {
+      isWorking = true;
+    });
+    try {
+      UserCredential usercredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(usercredential.user!.uid)
+          .get()
+          .then((DocumentSnapshot doc) async {
+        if (doc.exists) {
+          await box.put(usercredential.user!.uid.toString(), {
+            'isHost': doc['utype'],
+            'data': doc.data(),
+          });
+        } else {
+          log('not found');
+        }
+      });
+      setState(() {
+        isWorking = false;
+      });
+
+      styledsnackbar(txt: 'Logged In Successfully', icon: Icons.check_box);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        isWorking = false;
+      });
+      if (e.code == 'user-not-found') {
+        styledsnackbar(txt: 'No user found for that email.', icon: Icons.error);
+
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        styledsnackbar(
+            txt: 'Wrong password provided for that user.', icon: Icons.error);
+
+        print('Wrong password provided for that user.');
+      }
+    }
   } //signin method
 
   @override
@@ -120,27 +168,29 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: (){
-                        Navigator.push(context,
-                         MaterialPageRoute(builder: (context){
-                          return ForgotPasswordPage();
-
-                         },
-                         ),
-                         );
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ForgotPasswordPage();
+                            },
+                          ),
+                        );
                       },
-                      child: Text('Forgot Pasword ?',
-                      style: TextStyle(
-                        color: AppTheme.lightBlue,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      child: Text(
+                        'Forgot Pasword ?',
+                        style: TextStyle(
+                          color: AppTheme.lightBlue,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
 
-                   SizedBox(
+              SizedBox(
                 height: 10,
               ),
 
@@ -148,22 +198,26 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
-                  onTap: signIn,
-                  child:  Container( 
+                  onTap: isWorking ? null : signIn,
+                  child: Container(
                       padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
-                        color:AppTheme.lightBlue,
+                        color: AppTheme.lightBlue,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
-                        child: Text(
-                          'Sign in',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
+                        child: isWorking
+                            ? CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Sign in',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
                       )),
                 ),
               ),

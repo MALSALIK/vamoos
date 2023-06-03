@@ -1,9 +1,10 @@
-
 // ignore_for_file: library_private_types_in_public_api, avoid_print, constant_identifier_names
 
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:vamoos/widgets/logout_widget.dart';
 import '../User/app_theme.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -30,6 +31,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
     super.initState();
   }
 
+// Box box =  await Hive.openBox('userData');
+  Box box = Hive.box('userData');
   void setDrawerListArray() {
     drawerList = <DrawerList>[
       DrawerList(
@@ -102,30 +105,42 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             width: 120,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: AppTheme.black.withOpacity(0.6),
-                                    offset: const Offset(2.0, 4.0),
-                                    blurRadius: 8),
-                              ],
+                              color: AppTheme.black.withOpacity(0.5),
+                              // boxShadow: <BoxShadow>[
+                              //   BoxShadow(
+                              //       color: AppTheme.black.withOpacity(0.6),
+                              //       offset: const Offset(2.0, 4.0),
+                              //       blurRadius: 8),
+                              // ],
                             ),
                             child: ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(60.0)),
-                             // child: Image.asset(),
+                              child: Image.asset('assets/images/userImage.png'),
                             ),
                           ),
                         ),
                       );
                     },
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 8, left: 4),
                     child: Text(
-                      'Username here',
+                      '${box.get(FirebaseAuth.instance.currentUser!.uid.toString())['data']['uname']}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color : AppTheme.white,
+                        color: AppTheme.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8, left: 4),
+                    child: Text(
+                      '${box.get(FirebaseAuth.instance.currentUser!.uid.toString())['data']['email']}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
                         fontSize: 18,
                       ),
                     ),
@@ -173,7 +188,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   color: Color.fromARGB(255, 253, 20, 3),
                 ),
                 onTap: () {
-                   FirebaseAuth.instance.signOut();
+                  logout(context);
+                  // FirebaseAuth.instance.signOut();
                 },
               ),
               SizedBox(
@@ -208,7 +224,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   const SizedBox(
                     width: 6.0,
                     height: 46.0,
-                       ),
+                  ),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),

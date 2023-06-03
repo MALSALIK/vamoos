@@ -45,8 +45,17 @@ dependencies:
   animations: ^2.0.3
   table_calendar: ^3.0.9
   json_serializable: ^4.1.0
+  firebase_auth: ^4.5.0
+  firebase_core: ^2.11.0
+  cloud_firestore: ^4.0.0
+  get: any
+  hive: any
+  hive_flutter: any
+  firebase_storage: any
+  file_picker : any
+  cached_network_image: any
  
-  
+
   
 
 
@@ -59,10 +68,8 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-  firebase_auth: ^4.5.0
-  firebase_core: ^2.11.0
-  cloud_firestore: ^4.0.0
+  # flutter_lints: ^2.0.0
+  
 
  
 

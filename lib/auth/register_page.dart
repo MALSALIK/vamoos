@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors, depend_on_referenced_packages, library_prefixes
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vamoos/Pages/User/app_theme.dart';
 import 'package:vamoos/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' as FirebaseAuthUser;
+import 'package:vamoos/widgets/custom_snackbar.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -24,7 +27,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _confirmpasswordController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _unameController = TextEditingController();
-
+  bool isWorking = false;
+  bool _isHostSelected = false;
   @override
   void dispose() {
     _emailController.dispose();
@@ -37,31 +41,68 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future signUp() async {
+    Box box = await Hive.openBox('userData');
+
+    setState(() {
+      isWorking = true;
+    });
     if (passwordConfirmed()) {
-      await FirebaseAuthUser.FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      try {
+        UserCredential usercredential = await FirebaseAuthUser
+            .FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
 
-      );
-      
+        // ignore: unused_local_variable
+        final user = UserModel(
+          id: "",
+          utype: _isHostSelected,
+          uname: _unameController.text.trim(),
+          phoneno: int.tryParse(_phoneNumberController.text) ?? 0,
+          password: _passwordController.text.trim(),
+          email: _emailController.text.trim(),
+        );
+        box.put(usercredential.user!.uid.toString(), {
+          'isHost': _isHostSelected,
+          'data': user.toJson(),
+        });
+
+        await createUser(user, usercredential.user!.uid);
+        setState(() {
+          isWorking = false;
+        });
+        styledsnackbar(txt: 'User Created Successfully', icon: Icons.check_box);
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          isWorking = false;
+        });
+        if (e.code == 'weak-password') {
+          styledsnackbar(
+              txt: 'The password provided is too weak.', icon: Icons.error);
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          styledsnackbar(
+              txt: 'The account already exists for that email.',
+              icon: Icons.error);
+
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        setState(() {
+          isWorking = false;
+        });
+        styledsnackbar(txt: e.toString(), icon: Icons.error);
+
+        print(e);
+      }
     }
-
-    // ignore: unused_local_variable
-    final user = User(
-      id: "",
-      utype: false,
-      uname: _unameController.text.trim(),
-      phoneno: int.tryParse(_phoneNumberController.text) ?? 0,
-      password: _passwordController.text.trim(),
-      email: _emailController.text.trim(),
-    );
-
-    createUser(user);
   }
 
-  Future createUser(User user) async {
-    final docUser = FirebaseFirestore.instance.collection('user').doc();
-    user.id = docUser.id;
+  Future createUser(UserModel user, String uid) async {
+    final docUser = FirebaseFirestore.instance.collection('user').doc(uid);
+    user.id = uid;
     final json = user.toJson();
     await docUser.set(json);
   }
@@ -75,13 +116,13 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  bool emailConfirmed() {
-    if (_confirmemailController.text.trim() == _emailController.text.trim()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // bool emailConfirmed() {
+  //   if (_confirmemailController.text.trim() == _emailController.text.trim()) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -199,31 +240,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 10,
               ),
 
-              //confirm Password textfield
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: _confirmemailController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        labelText: 'Confirm Email',
-                        hintText: 'Confirm Your Email',
-                        prefixIcon: Icon(Icons.email),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
 
               //Password textfield
               Padding(
@@ -279,13 +295,29 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 10,
               ),
 
-              GestureDetector(child: UserTypeButton()),
+              GestureDetector(
+                  child: SwitchListTile(
+                title: const Text(
+                  'Are you a Host?',
+                  style: TextStyle(
+                    color: AppTheme.notWhite,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 23,
+                  ),
+                ),
+                value: _isHostSelected,
+                onChanged: (bool value) {
+                  setState(() {
+                    _isHostSelected = value;
+                  });
+                },
+              )),
 
               //sign in button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
-                  onTap: signUp,
+                  onTap: isWorking ? null : signUp,
                   child: Container(
                       padding: EdgeInsets.all(25),
                       decoration: BoxDecoration(
@@ -293,14 +325,18 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
+                        child: isWorking
+                            ? CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
                       )),
                 ),
               ),

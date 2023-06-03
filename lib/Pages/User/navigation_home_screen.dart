@@ -1,7 +1,11 @@
-
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:vamoos/Pages/Host/host_page.dart';
 import '../custom_drawer/drawer_user_controller.dart';
 import '../custom_drawer/home_drawer.dart';
 import 'app_theme.dart';
@@ -17,14 +21,18 @@ class NavigationHomeScreen extends StatefulWidget {
   _NavigationHomeScreenState createState() => _NavigationHomeScreenState();
 }
 
-class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
+class _NavigationHomeScreenState extends State {
   Widget? screenView;
   DrawerIndex? drawerIndex;
-
+  bool ishost = false;
+  Box box = Hive.box('userData');
   @override
   void initState() {
+    var val = box.get(FirebaseAuth.instance.currentUser!.uid.toString());
+    log(val['isHost'].toString());
+    ishost = val['isHost'] ?? false;
     drawerIndex = DrawerIndex.HOME;
-    screenView = const UserHomePage();
+    screenView = ishost ? const HostPage() : const UserHomePage();
     super.initState();
   }
 
@@ -58,30 +66,27 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
       switch (drawerIndex) {
         case DrawerIndex.HOME:
           setState(() {
-            screenView =  const UserHomePage();
+            screenView = const UserHomePage();
           });
           break;
         case DrawerIndex.Help:
           setState(() {
-            screenView =  const HelpScreen();
+            screenView = const HelpScreen();
           });
           break;
         case DrawerIndex.FeedBack:
           setState(() {
-            screenView =  const FeedbackScreen();
+            screenView = const FeedbackScreen();
           });
           break;
         case DrawerIndex.Invite:
           setState(() {
-            screenView =  const InviteFriend();
+            screenView = const InviteFriend();
           });
           break;
         default:
           break;
       }
-      
     }
-    
   }
 }
-

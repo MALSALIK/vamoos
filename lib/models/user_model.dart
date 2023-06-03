@@ -2,8 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-class User {
+class UserModel {
   String id;
   final bool utype;
   final String uname;
@@ -11,7 +10,7 @@ class User {
   final int phoneno;
   final String password;
 
-  User({
+  UserModel({
     required this.utype,
     required this.uname,
     required this.email,
@@ -20,9 +19,9 @@ class User {
     required this.password,
   });
 
-  factory User.fromSnapshot(DocumentSnapshot snapshot) {
+  factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     var data = snapshot.data() as Map<String, dynamic>;
-    return User(
+    return UserModel(
       id: snapshot.id,
       utype: data['utype'],
       uname: data['name'],
@@ -42,4 +41,3 @@ class User {
     };
   }
 }
-
